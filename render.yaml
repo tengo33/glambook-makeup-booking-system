@@ -1,20 +1,37 @@
 services:
   - type: web
-    name: glambook-makeup
-    runtime: docker
+    name: laravel-app
+    env: docker
     plan: free
-    region: singapore
-    dockerfilePath: ./Dockerfile
-    healthCheckPath: /login
+    autoDeploy: true
+    buildCommand: "composer install --no-dev --optimize-autoloader && php artisan key:generate"
+    startCommand: "./start-container.sh"
     envVars:
       - key: APP_ENV
         value: production
       - key: APP_DEBUG
         value: false
+      - key: APP_KEY
+        sync: false
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        fromService:
+          name: laravel-db
+          type: mysql
+          property: host
+      - key: DB_DATABASE
+        value: laravel
+      - key: DB_USERNAME
+        value: root
+      - key: DB_PASSWORD
+        fromService:
+          name: laravel-db
+          type: mysql
+          property: password
 
 databases:
-  - name: glambook-db
-    databaseName: glambook
-    user: glambook_user
-    region: singapore
+  - name: laravel-db
     plan: free
+    databaseName: laravel
+    user: root

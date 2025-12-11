@@ -418,12 +418,3 @@ Route::get('/debug-appointments/{date}', function($date) {
 Route::get('/tasks/calendar', [TaskController::class, 'calendar'])->name('tasks.calendar');
 });
 
-// Add at TOP of routes/web.php
-Route::get('/test', function() {
-    return response()->json([
-        'status' => 'ok',
-        'timestamp' => now(),
-        'db_connected' => DB::connection()->getPdo() ? 'yes' : 'no',
-        'env' => app()->environment(),
-    ]);
-});
