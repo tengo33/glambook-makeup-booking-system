@@ -21,7 +21,7 @@ RUN composer install --no-dev --optimize-autoloader
 # Set permissions for storage and cache
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
-# Expose port (Render handles routing)
+# Expose port
 EXPOSE 8080
 
 # Start PHP-FPM with cache clearing
