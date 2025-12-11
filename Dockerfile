@@ -34,6 +34,11 @@ RUN php artisan key:generate
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html/storage \
     && chmod -R 775 /var/www/html/storage
+# Add this before CMD
+RUN echo "<?php echo 'Basic PHP OK at ' . date('Y-m-d H:i:s'); \
+    echo '<br>PHP Version: ' . phpversion(); \
+    echo '<br>Extensions: ' . implode(', ', get_loaded_extensions()); \
+    ?>" > /var/www/html/public/test.php
 
 EXPOSE 80
 CMD ["apache2-foreground"]
