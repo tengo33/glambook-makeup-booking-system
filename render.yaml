@@ -1,20 +1,16 @@
 services:
   - type: web
     name: glambook-makeup
-    runtime: php
+    runtime: docker
+    plan: free
     region: singapore
-    buildCommand: |
-      composer install --no-dev --optimize-autoloader
-      php artisan key:generate
-      php artisan storage:link
-      npm ci && npm run build
-    startCommand: |
-      php artisan migrate --force
-      php artisan serve --host=0.0.0.0 --port=${PORT}
+    dockerfilePath: ./Dockerfile
     healthCheckPath: /login
     envVars:
       - key: APP_ENV
         value: production
+      - key: APP_DEBUG
+        value: false
 
 databases:
   - name: glambook-db
