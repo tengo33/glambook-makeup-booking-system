@@ -11,6 +11,11 @@ services:
         value: production
       - key: APP_DEBUG
         value: false
+      - key: APP_URL
+        value: https://glambook-makeup.onrender.com
+      # Database vars will be auto-injected by Render
+      - key: DB_CONNECTION
+        value: pgsql
 
 databases:
   - name: glambook-db
