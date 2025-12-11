@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: glambook-makeup
+    env: php
+    region: singapore
+    buildCommand: |
+      composer install --no-dev --optimize-autoloader
+      php artisan key:generate
+      php artisan storage:link
+      npm ci && npm run build
+    startCommand: |
+      php artisan migrate --force
+      php artisan serve --host=0.0.0.0 --port=${PORT}
+    healthCheckPath: /login
+    envVars:
+      - key: APP_ENV
+        value: production
+
+databases:
+  - name: glambook-db
+    databaseName: glambook
+    user: glambook_user
+    region: singapore
+    plan: free
