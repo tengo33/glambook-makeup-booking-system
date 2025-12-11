@@ -21,13 +21,11 @@ RUN composer install --no-dev --optimize-autoloader
 # Set permissions for storage and cache
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
-# Clear Laravel caches
-RUN php artisan config:clear && \
-    php artisan route:clear && \
-    php artisan view:clear
-
-# Expose port (Render will handle routing)
+# Expose port (Render handles routing)
 EXPOSE 8080
 
-# Start PHP-FPM
-CMD ["php-fpm"]
+# Start PHP-FPM with cache clearing
+CMD php artisan config:clear && \
+    php artisan route:clear && \
+    php artisan view:clear && \
+    php-fpm
