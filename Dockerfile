@@ -21,11 +21,12 @@ RUN composer install --no-dev --optimize-autoloader
 # Set permissions for storage and cache
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
-# Expose port
+# Expose port (Render handles routing)
 EXPOSE 8080
 
-# Start PHP-FPM with cache clearing
+# Start PHP-FPM with safe cache clearing
+# Ignore errors for view:clear so deployment does not fail
 CMD php artisan config:clear && \
     php artisan route:clear && \
-    php artisan view:clear && \
+    php artisan view:clear || true && \
     php-fpm
