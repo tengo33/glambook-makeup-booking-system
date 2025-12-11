@@ -1,7 +1,7 @@
 services:
   - type: web
     name: glambook-makeup
-    env: php
+    runtime: php
     region: singapore
     buildCommand: |
       composer install --no-dev --optimize-autoloader
