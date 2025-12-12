@@ -1,18 +1,12 @@
 #!/bin/bash
 
-# ----------------------------
-# 1️⃣ Clear Laravel caches
-# ----------------------------
+# Run Laravel optimizations
 php artisan config:clear || true
 php artisan route:clear || true
 php artisan view:clear || true
 
-# ----------------------------
-# 2️⃣ Run migrations safely
-# ----------------------------
+# Run migrations (safe)
 php artisan migrate --force || true
 
-# ----------------------------
-# 3️⃣ Start Supervisor (runs nginx + php-fpm)
-# ----------------------------
+# Start Supervisor (nginx + php-fpm)
 exec /usr/bin/supervisord -n
