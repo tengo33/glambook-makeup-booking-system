@@ -15,23 +15,31 @@ WORKDIR /var/www
 # Copy app files
 COPY . .
 
-# Install PHP dependencies (in build; entrypoint will also ensure vendor if missing)
+# Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Laravel permissions
+# Laravel storage permissions
 RUN chmod -R 775 storage bootstrap/cache && \
     chown -R www-data:www-data storage bootstrap/cache
 
-# Copy nginx and supervisor config
+# Ensure PHP-FPM socket directory exists
+RUN mkdir -p /var/run/php && chown -R www-data:www-data /var/run/php
+
+# Copy nginx config
 COPY deploy/nginx.conf /etc/nginx/sites-enabled/default
+
+# Remove old nginx default file if exists
+RUN rm -f /etc/nginx/sites-enabled/default.conf || true
+
+# Copy supervisor config
 COPY deploy/supervisor.conf /etc/supervisor/conf.d/supervisor.conf
 
-# Copy entrypoint script and make executable
+# Copy entrypoint script
 COPY deploy/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-# Expose port expected by Render
+# Expose port
 EXPOSE 8080
 
-# Use entrypoint that runs migrations and then starts supervisord
+# Start the entrypoint (runs migrations + supervisor)
 CMD ["/entrypoint.sh"]
