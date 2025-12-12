@@ -1,9 +1,8 @@
-# Use official PHP 8.2 FPM image
 FROM php:8.2-fpm
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    git curl unzip libpq-dev libonig-dev libzip-dev zip \
+    git curl unzip libpq-dev libonig-dev libzip-dev zip nginx supervisor \
     && docker-php-ext-install pdo pdo_pgsql mbstring zip
 
 # Install Composer
@@ -18,15 +17,19 @@ COPY . .
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Set permissions for storage and cache
-RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+# Laravel permissions
+RUN chmod -R 775 storage bootstrap/cache && \
+    chown -R www-data:www-data storage bootstrap/cache
 
-# Expose port (Render routes automatically)
+# Copy Nginx config
+COPY deploy/nginx.conf /etc/nginx/sites-enabled/default
+
+# Copy Supervisor config
+COPY deploy/supervisor.conf /etc/supervisor/conf.d/supervisor.conf
+
+# Expose port expected by Render
 EXPOSE 8080
 
-# Start PHP-FPM with safe cache clearing
-# Ignore errors for view:clear so deployment does not fail
-CMD php artisan config:clear && \
-    php artisan route:clear && \
-    php artisan view:clear || true && \
-    php-fpm
+# Start Supervisor (runs nginx + php-fpm)
+/usr/bin/supervisord -n
+CMD ["/usr/bin/supervisord"]
