@@ -24,12 +24,14 @@ RUN chmod -R 775 storage bootstrap/cache && \
 # Copy Nginx config
 COPY deploy/nginx.conf /etc/nginx/sites-enabled/default
 
-# Copy Supervisor config
+# Remove default Nginx config if exists
+RUN rm -f /etc/nginx/sites-enabled/default.conf
+
+# Supervisor config
 COPY deploy/supervisor.conf /etc/supervisor/conf.d/supervisor.conf
 
 # Expose port expected by Render
 EXPOSE 8080
 
-# Start Supervisor (runs nginx + php-fpm)
-/usr/bin/supervisord -n
-CMD ["/usr/bin/supervisord"]
+# Start Supervisor in foreground
+CMD ["/usr/bin/supervisord", "-n"]
