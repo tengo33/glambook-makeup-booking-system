@@ -1,21 +1,18 @@
-#!/bin/sh
-set -e
+#!/bin/bash
 
-# Wait a few seconds for DB network to be ready (optional)
-sleep 2
-
-# Ensure composer autoload exists (skip if vendor present)
-if [ -f composer.json ] && [ ! -d vendor ]; then
-  composer install --no-dev --optimize-autoloader
-fi
-
-# Run migrations (do not fail deployment if something goes wrong)
-php artisan migrate --force || true
-
-# Clear caches so Laravel picks up env vars
+# ----------------------------
+# 1️⃣ Clear Laravel caches
+# ----------------------------
 php artisan config:clear || true
 php artisan route:clear || true
 php artisan view:clear || true
 
-# Start supervisord in foreground
+# ----------------------------
+# 2️⃣ Run migrations safely
+# ----------------------------
+php artisan migrate --force || true
+
+# ----------------------------
+# 3️⃣ Start Supervisor (runs nginx + php-fpm)
+# ----------------------------
 exec /usr/bin/supervisord -n
