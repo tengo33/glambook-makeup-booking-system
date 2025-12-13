@@ -26,7 +26,7 @@ php artisan migrate:fresh --force || true
 
 # FINAL FIX for storage permission issues
 chmod -R 777 storage storage/logs bootstrap/cache
-chown -R www-data:www-data storage storage/logs bootstrap/cache
+chown -R www-data:www-data storage storage bootstrap/cache
 
 # Start Supervisor
 exec /usr/bin/supervisord -n
