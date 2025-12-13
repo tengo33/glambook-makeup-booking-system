@@ -29,7 +29,7 @@ COPY . .
 RUN composer install --no-dev --prefer-dist --optimize-autoloader
 
 # ------------------------------------------------
-# 6️⃣ Laravel storage permissions and folders
+# 6️⃣ Laravel storage folders and permissions
 # ------------------------------------------------
 RUN mkdir -p storage/framework/{cache,sessions,views} \
     && mkdir -p bootstrap/cache \
@@ -37,7 +37,7 @@ RUN mkdir -p storage/framework/{cache,sessions,views} \
     && chown -R www-data:www-data storage bootstrap/cache
 
 # ------------------------------------------------
-# 7️⃣ Copy config files
+# 7️⃣ Copy configs
 # ------------------------------------------------
 COPY deploy/nginx.conf /etc/nginx/sites-enabled/default
 COPY deploy/supervisor.conf /etc/supervisor/conf.d/supervisor.conf
@@ -45,7 +45,7 @@ COPY deploy/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # ------------------------------------------------
-# 8️⃣ Expose port
+# 8️⃣ Expose port (Render uses $PORT)
 # ------------------------------------------------
 EXPOSE 8080
 
