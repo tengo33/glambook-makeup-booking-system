@@ -12,14 +12,17 @@ mkdir -p bootstrap/cache
 chown -R www-data:www-data storage bootstrap/cache
 chmod -R 775 storage bootstrap/cache
 
-# Clear Laravel caches safely
+# Clear Laravel caches
 php artisan config:clear || true
 php artisan cache:clear || true
 php artisan route:clear || true
 php artisan view:clear || true
 
-# Run migrations safely
+# Generate APP_KEY if needed
+php artisan key:generate --force || true
+
+# Migrate database
 php artisan migrate --force || true
 
-# Start Supervisor (runs PHP-FPM + Nginx)
+# Start Supervisor
 exec /usr/bin/supervisord -n
