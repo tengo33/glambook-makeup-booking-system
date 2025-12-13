@@ -1,10 +1,10 @@
 FROM php:8.2-fpm
 
 # ------------------------------------------------
-# 1️⃣ Install system dependencies
+# 1️⃣ Install system dependencies + gettext for envsubst
 # ------------------------------------------------
 RUN apt-get update && apt-get install -y \
-    git curl unzip libpq-dev libonig-dev libzip-dev zip nginx supervisor \
+    git curl unzip libpq-dev libonig-dev libzip-dev zip nginx supervisor gettext-base \
     && docker-php-ext-install pdo pdo_pgsql mbstring zip \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 

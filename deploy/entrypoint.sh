@@ -1,6 +1,12 @@
 #!/bin/bash
 
 # ----------------------------
+# 0️⃣ Replace $PORT in nginx.conf dynamically
+# ----------------------------
+envsubst '${PORT}' < /etc/nginx/sites-enabled/default > /etc/nginx/sites-enabled/default.tmp
+mv /etc/nginx/sites-enabled/default.tmp /etc/nginx/sites-enabled/default
+
+# ----------------------------
 # 1️⃣ Clear Laravel caches safely
 # ----------------------------
 php artisan config:clear || true
