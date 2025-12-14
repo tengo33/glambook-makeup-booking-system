@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="screenshots/logo.png" width="200" alt="System Logo">
+
 </p>
 
 <h1 align="center">💄 Makeup Appointment Planner</h1>
